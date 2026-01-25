@@ -1,4 +1,4 @@
-package com.wangley.musicapi.auth;
+package com.wangley.musicapi.auth.dto;
 
 public record LoginRequest(
     String username,

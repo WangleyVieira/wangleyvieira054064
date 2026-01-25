@@ -35,7 +35,7 @@ security:
   jwt:
     secret: ${JWT_SECRET}
     expiration: ${JWT_EXPIRATION:300}
-    refresh-expiration: ${JWT_REFRESH_EXPIRATION:900}
+    refresh-expiration: ${JWT_REFRESH_EXPIRATION:900000 }
 
 minio:
   url: ${MINIO_URL}

@@ -21,6 +21,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    /*Não executar o filtro para endpoints públicos*/
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+
+        /* Ignorar filtros para endpoints públicos */
+        return path.startsWith("/auth/login")
+                || path.startsWith("/auth/refresh")
+                || path.startsWith("/swagger-ui")
+                || path.startsWith("/v3/api-docs")
+                || path.startsWith("/actuator");
+    }
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -30,20 +43,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String header = request.getHeader("Authorization");
 
+        /* Verificar se o cabeçalho Authorization contém um token Bearer */
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
 
             if (jwtTokenProvider.validateToken(token)) {
                 String username = jwtTokenProvider.getUsernameFromToken(token);
 
+                /* Criar autenticação baseada no token JWT */
                 UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(username, null, List.of());
+                        new UsernamePasswordAuthenticationToken(
+                                username,
+                                null,
+                                List.of()
+                        );
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
-
         filterChain.doFilter(request, response);
     }
 }
+
 
