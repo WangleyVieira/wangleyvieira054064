@@ -25,5 +25,5 @@ public class Album {
     private LocalDate dataLancamento;
 
     @ManyToMany(mappedBy = "albuns")
-    private Set<Artista> artistas = new HashSet<>();
+    private Set<Artist> artistas = new HashSet<>();
 }

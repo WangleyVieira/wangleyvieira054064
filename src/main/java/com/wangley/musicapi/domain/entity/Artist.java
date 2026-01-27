@@ -1,6 +1,6 @@
 package com.wangley.musicapi.domain.entity;
 
-import com.wangley.musicapi.domain.enums.TipoArtista;
+import com.wangley.musicapi.domain.enums.TypeArtist;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +12,7 @@ import java.util.Set;
 @Table(name = "artista")
 @Getter
 @Setter
-public class Artista {
+public class Artist {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,7 @@ public class Artista {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TipoArtista tipo;
+    private TypeArtist tipo;
 
     @ManyToMany
     @JoinTable(
