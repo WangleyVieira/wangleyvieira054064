@@ -66,6 +66,19 @@ public class GlobalExceptionHandler {
                         "message", "Erro inesperado no servidor"
                 ));
     }
+
+    /**
+     * Argumento ilegal
+     * Captura IllegalArgumentException e retorna 400 - Bad Request
+     * usado quando um ou mais artistas não são encontrados ao criar um álbum
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, String>> handleIllegalArgument(IllegalArgumentException ex) {
+        return ResponseEntity
+                .badRequest()
+                .body(Map.of("error", ex.getMessage()));
+    }
+
 }
 
 

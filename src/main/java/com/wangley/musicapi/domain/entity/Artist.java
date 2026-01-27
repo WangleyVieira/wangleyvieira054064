@@ -25,11 +25,6 @@ public class Artist {
     @Column(nullable = false)
     private TypeArtist tipo;
 
-    @ManyToMany
-    @JoinTable(
-            name = "artista_album",
-            joinColumns = @JoinColumn(name = "artista_id"),
-            inverseJoinColumns = @JoinColumn(name = "album_id")
-    )
-    private Set<Album> albuns = new HashSet<>();
+    @ManyToMany(mappedBy = "artistas")
+    private Set<Album> albums = new HashSet<>();
 }

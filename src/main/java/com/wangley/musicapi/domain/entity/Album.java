@@ -24,6 +24,11 @@ public class Album {
     @Column(name = "data_lancamento")
     private LocalDate dataLancamento;
 
-    @ManyToMany(mappedBy = "albuns")
+    @ManyToMany
+    @JoinTable(
+            name = "artista_album",
+            joinColumns = @JoinColumn(name = "album_id"),
+            inverseJoinColumns = @JoinColumn(name = "artista_id")
+    )
     private Set<Artist> artistas = new HashSet<>();
 }

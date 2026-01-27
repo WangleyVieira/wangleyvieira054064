@@ -7,6 +7,7 @@ import com.wangley.musicapi.dto.response.ArtistResponse;
 import com.wangley.musicapi.exception.ResourceNotFoundException;
 import com.wangley.musicapi.repository.ArtistRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class ArtistService {
         this.artistRepository = artistaRepository;
     }
 
+    @Transactional
     public Artist create(ArtistCreateRequest artistaCreateRequest) {
         Artist artista = new Artist();
         artista.setNome(artistaCreateRequest.nome());
@@ -28,6 +30,7 @@ public class ArtistService {
         return artistRepository.save(artista);
     }
 
+    @Transactional
     public ArtistResponse update(Long id, ArtistUpdateRequest artistaUpdateRequest) {
 
         Artist artista = artistRepository.findById(id)
@@ -47,8 +50,7 @@ public class ArtistService {
         );
     }
 
-
-
+    @Transactional(readOnly = true)
     public List<ArtistResponse> list() {
         return artistRepository.findAll()
                 .stream()
@@ -60,6 +62,7 @@ public class ArtistService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public ArtistResponse findById(Long id) {
         Artist artista = artistRepository.findById(id)
                 .orElseThrow(() ->
