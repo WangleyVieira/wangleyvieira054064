@@ -1,5 +1,6 @@
 package com.wangley.musicapi.security;
 
+import com.wangley.musicapi.infrastructure.ratelimit.RateLimitFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +19,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
-            JwtAuthenticationFilter jwtFilter
+            JwtAuthenticationFilter jwtFilter,
+            RateLimitFilter rateLimitFilter
     ) throws Exception {
 
         http
@@ -52,6 +54,10 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
 
+                /* Rate limit vem primeiro. Limita o número de requisições */
+                .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
+
+                /* JWT depois */
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .exceptionHandling(ex -> ex
