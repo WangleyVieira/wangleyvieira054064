@@ -5,6 +5,8 @@ import com.wangley.musicapi.auth.dto.LoginRequest;
 import com.wangley.musicapi.auth.dto.RefreshTokenRequest;
 import com.wangley.musicapi.auth.dto.RefreshTokenResponse;
 import com.wangley.musicapi.security.JwtTokenProvider;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Autenticação", description = "Endpoints de autenticação e renovação")
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/v1/auth")
 public class AuthController {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -22,6 +25,10 @@ public class AuthController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    @Operation(
+            summary = "Autenticar usuário e gerar tokens JWT",
+            description = "Retornar access token e refresh token para autenticação"
+    )
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(
             @RequestBody LoginRequest request
@@ -39,6 +46,10 @@ public class AuthController {
         );
     }
 
+    @Operation(
+            summary = "Renovar access token",
+            description = "Gera um novo access token a partir de um refresh token"
+    )
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refresh(
             @RequestBody RefreshTokenRequest request
