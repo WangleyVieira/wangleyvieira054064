@@ -2,18 +2,23 @@ package com.wangley.musicapi.service;
 
 import com.wangley.musicapi.domain.entity.Album;
 import com.wangley.musicapi.domain.entity.Artist;
+import com.wangley.musicapi.domain.enums.TypeArtist;
 import com.wangley.musicapi.dto.request.AlbumCreateRequest;
 import com.wangley.musicapi.dto.response.AlbumResponse;
 import com.wangley.musicapi.dto.response.ArtistResumeResponse;
 import com.wangley.musicapi.exception.ResourceNotFoundException;
 import com.wangley.musicapi.repository.AlbumRepository;
 import com.wangley.musicapi.repository.ArtistRepository;
-//import jakarta.transaction.Transactional;
+import com.wangley.musicapi.repository.specification.AlbumSpecification;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -67,14 +72,6 @@ public class AlbumService {
     }
 
     @Transactional(readOnly = true)
-    public List<AlbumResponse> findAll() {
-        return albumRepository.findAll()
-                .stream()
-                .map(this::albumCreateResponse)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
     public AlbumResponse findById(Long id) {
         Album album = albumRepository.findById(id)
                 .orElseThrow(() ->
@@ -106,5 +103,27 @@ public class AlbumService {
         Album updatedAlbum = albumRepository.save(album);
 
         return albumCreateResponse(updatedAlbum);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<AlbumResponse> findAll(
+            Pageable pageable,
+            TypeArtist tipo,
+            String nomeArtista,
+            String nomeAlbum,
+            Sort.Direction sortDirection
+    ) {
+        Pageable pageRequest = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize()
+        );
+
+        Specification<Album> spec = AlbumSpecification.filter(
+                tipo, nomeArtista, nomeAlbum, sortDirection
+        );
+
+        Page<Album> page = albumRepository.findAll(spec, pageRequest);
+
+        return page.map(this::albumCreateResponse);
     }
 }
