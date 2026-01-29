@@ -1,0 +1,63 @@
+version: "3.9"
+
+services:
+
+  postgres:
+    image: postgres:16
+    container_name: music-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: musicdb
+      POSTGRES_USER: music
+      POSTGRES_PASSWORD: music
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  minio:
+    image: minio/minio
+    container_name: music-minio
+    command: server /data --console-address ":9001"
+    restart: always
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+
+  music-api:
+    build: .
+    container_name: music-api
+    restart: always
+    depends_on:
+      - postgres
+      - minio
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+      # JWT
+      JWT_SECRET: my-super-secret-key-which-is-at-least-32-bytes
+      JWT_EXPIRATION: 300000
+      JWT_REFRESH_EXPIRATION: 900000
+
+      # DATABASE
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/musicdb
+      SPRING_DATASOURCE_USERNAME: music
+      SPRING_DATASOURCE_PASSWORD: music
+
+      # MINIO
+      MINIO_URL: http://minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_BUCKET: album-covers
+
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
+  minio_data:
