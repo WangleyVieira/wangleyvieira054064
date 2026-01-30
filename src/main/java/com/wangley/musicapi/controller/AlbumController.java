@@ -4,6 +4,7 @@ import com.wangley.musicapi.domain.entity.Album;
 import com.wangley.musicapi.domain.enums.TypeArtist;
 import com.wangley.musicapi.dto.request.AlbumCreateRequest;
 import com.wangley.musicapi.dto.response.AlbumResponse;
+import com.wangley.musicapi.service.AlbumCoverService;
 import com.wangley.musicapi.service.AlbumService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,8 +16,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 @Tag(name = "Álbuns", description = "Endpoints para gerenciamento de álbuns")
@@ -25,9 +28,11 @@ import java.util.List;
 public class AlbumController {
 
     private final AlbumService albumService;
+    private final AlbumCoverService albumCoverService;
 
-    public  AlbumController(AlbumService albumService) {
+    public  AlbumController(AlbumService albumService, AlbumCoverService albumCoverService) {
         this.albumService = albumService;
+        this.albumCoverService = albumCoverService;
     }
 
     @Operation(summary = "Cadastrar um novo álbum")
@@ -84,4 +89,17 @@ public class AlbumController {
                 sortDirection
         );
     }
+
+    @Operation(summary = "Cadastrar imagem relacionado ao álbum")
+    @PostMapping(value = "/{id}/cover", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> uploadCover(
+            @Parameter(description = "ID do álbum")
+            @PathVariable Long id,
+            @Parameter(description = "imagem (.png, .jpg, .jpeg)")
+            @RequestPart("file") MultipartFile file
+    ) {
+        albumCoverService.uploadCover(id, file);
+        return ResponseEntity.noContent().build();
+    }
+
 }

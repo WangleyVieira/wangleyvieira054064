@@ -1,6 +1,5 @@
 package com.wangley.musicapi.exception;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -34,6 +33,22 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errors);
     }
 
+    /**
+     * Regras de negócio
+     * 400 - Bad Request
+     * Ex: tipo de arquivo inválido, arquivo vazio, etc.
+     */
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<Map<String, String>> handleBusinessException(
+            BusinessException ex) {
+
+        return ResponseEntity.badRequest()
+                .body(Map.of(
+                        "status", "400",
+                        "error", "Bad Request",
+                        "message", ex.getMessage()
+                ));
+    }
 
     /**
      * Recurso não encontrado
@@ -47,6 +62,22 @@ public class GlobalExceptionHandler {
                 .body(Map.of(
                         "status", "404",
                         "error", "Not Found",
+                        "message", ex.getMessage()
+                ));
+    }
+
+    /**
+     * Argumento ilegal
+     * 400 - Bad Request
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, String>> handleIllegalArgument(
+            IllegalArgumentException ex) {
+
+        return ResponseEntity.badRequest()
+                .body(Map.of(
+                        "status", "400",
+                        "error", "Bad Request",
                         "message", ex.getMessage()
                 ));
     }
@@ -66,19 +97,6 @@ public class GlobalExceptionHandler {
                         "message", "Erro inesperado no servidor"
                 ));
     }
-
-    /**
-     * Argumento ilegal
-     * Captura IllegalArgumentException e retorna 400 - Bad Request
-     * usado quando um ou mais artistas não são encontrados ao criar um álbum
-     */
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Map<String, String>> handleIllegalArgument(IllegalArgumentException ex) {
-        return ResponseEntity
-                .badRequest()
-                .body(Map.of("error", ex.getMessage()));
-    }
-
 }
 
 

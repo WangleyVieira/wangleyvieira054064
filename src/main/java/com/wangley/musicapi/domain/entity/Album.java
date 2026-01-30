@@ -31,4 +31,7 @@ public class Album {
             inverseJoinColumns = @JoinColumn(name = "artista_id")
     )
     private Set<Artist> artistas = new HashSet<>();
+
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<AlbumCover> covers = new HashSet<>();
 }
