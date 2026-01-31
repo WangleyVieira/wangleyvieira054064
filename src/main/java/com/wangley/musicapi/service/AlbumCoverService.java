@@ -2,16 +2,17 @@ package com.wangley.musicapi.service;
 
 import com.wangley.musicapi.domain.entity.Album;
 import com.wangley.musicapi.domain.entity.AlbumCover;
+import com.wangley.musicapi.dto.response.AlbumCoverUrlResponse;
 import com.wangley.musicapi.exception.ResourceNotFoundException;
 import com.wangley.musicapi.repository.AlbumCoverRepository;
 import com.wangley.musicapi.repository.AlbumRepository;
 import com.wangley.musicapi.service.infra.MinioService;
-import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Set;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -46,6 +47,38 @@ public class AlbumCoverService {
         albumCoverRepository.save(cover);
 
     }
+
+    @Value("${minio.bucket}")
+    private String bucket;
+
+    @Transactional(readOnly = true)
+    public AlbumCoverUrlResponse generateCoverUrl(Long albumId) {
+
+        // valida se o álbum existe
+        albumRepository.findById(albumId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Álbum não encontrado")
+                );
+
+        AlbumCover cover = albumCoverRepository.findByAlbumId(albumId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Capa do álbum não encontrada")
+                );
+
+        int expirationMinutes = 30;
+
+        String url = minioService.generatePresignedGetUrl(
+                bucket,
+                cover.getObjectName(),
+                expirationMinutes
+        );
+
+        return new AlbumCoverUrlResponse(
+                url,
+                LocalDateTime.now().plusMinutes(expirationMinutes)
+        );
+    }
+
 }
 
 

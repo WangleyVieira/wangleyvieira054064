@@ -3,6 +3,7 @@ package com.wangley.musicapi.controller;
 import com.wangley.musicapi.domain.entity.Album;
 import com.wangley.musicapi.domain.enums.TypeArtist;
 import com.wangley.musicapi.dto.request.AlbumCreateRequest;
+import com.wangley.musicapi.dto.response.AlbumCoverUrlResponse;
 import com.wangley.musicapi.dto.response.AlbumResponse;
 import com.wangley.musicapi.service.AlbumCoverService;
 import com.wangley.musicapi.service.AlbumService;
@@ -102,4 +103,16 @@ public class AlbumController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(
+            summary = "Gerar URL temporária da capa do álbum",
+            description = "Gera uma URL pré-assinada com validade de 30 minutos para acesso à capa do álbum"
+    )
+    @GetMapping("/{id}/cover/url")
+    public ResponseEntity<AlbumCoverUrlResponse> getCoverUrl(
+            @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(
+                albumCoverService.generateCoverUrl(id)
+        );
+    }
 }
