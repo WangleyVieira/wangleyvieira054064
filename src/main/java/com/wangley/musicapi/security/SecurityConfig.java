@@ -50,6 +50,11 @@ public class SecurityConfig {
                                 "/actuator/health/**"
                         ).permitAll()
 
+                        /* WEBSOCKET */
+                        .requestMatchers(
+                                "/ws/**"
+                        ).permitAll()
+
                         /* DEMAIS ROTAS */
                         .anyRequest().authenticated()
                 )

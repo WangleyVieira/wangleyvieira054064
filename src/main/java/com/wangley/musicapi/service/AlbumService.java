@@ -10,6 +10,7 @@ import com.wangley.musicapi.exception.ResourceNotFoundException;
 import com.wangley.musicapi.repository.AlbumRepository;
 import com.wangley.musicapi.repository.ArtistRepository;
 import com.wangley.musicapi.repository.specification.AlbumSpecification;
+import com.wangley.musicapi.websocket.AlbumEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,10 +28,16 @@ public class AlbumService {
 
     private final AlbumRepository albumRepository;
     private final ArtistRepository artistRepository;
+    private final AlbumEventPublisher albumEventPublisher;
 
-    public AlbumService(AlbumRepository albumRepository, ArtistRepository artistRepository) {
+    public AlbumService(
+            AlbumRepository albumRepository,
+            ArtistRepository artistRepository,
+            AlbumEventPublisher albumEventPublisher
+    ) {
         this.albumRepository = albumRepository;
         this.artistRepository = artistRepository;
+        this.albumEventPublisher = albumEventPublisher;
     }
 
     @Transactional
@@ -50,6 +57,11 @@ public class AlbumService {
         album.setArtistas(artistas);
 
         Album savedAlbum = albumRepository.save(album);
+
+        albumEventPublisher.publishAlbumCreated(
+                savedAlbum.getId(),
+                savedAlbum.getNome()
+        );
 
         return albumCreateResponse(savedAlbum);
 
