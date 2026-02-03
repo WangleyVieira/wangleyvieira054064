@@ -5,6 +5,7 @@ import com.wangley.musicapi.dto.request.ArtistCreateRequest;
 import com.wangley.musicapi.domain.enums.TypeArtist;
 import com.wangley.musicapi.domain.entity.Artist;
 import com.wangley.musicapi.dto.request.ArtistUpdateRequest;
+import com.wangley.musicapi.dto.response.AlbumSimpleResponse;
 import com.wangley.musicapi.dto.response.ArtistResponse;
 import com.wangley.musicapi.exception.ResourceNotFoundException;
 import com.wangley.musicapi.infrastructure.ratelimit.RateLimitFilter;
@@ -95,15 +96,22 @@ class ArtistControllerTest {
         verifyNoInteractions(artistService);
     }
 
-    @DisplayName("Deve atualizar artista com sucesso")
     @Test
+    @DisplayName("Deve atualizar um artista com sucesso")
     void shouldUpdateArtistSuccessfully() throws Exception {
 
         ArtistUpdateRequest request =
                 new ArtistUpdateRequest("Nirvana", TypeArtist.BANDA);
 
         ArtistResponse response =
-                new ArtistResponse(1L, "Nirvana", TypeArtist.BANDA);
+                new ArtistResponse(
+                        1L,
+                        "Nirvana",
+                        TypeArtist.BANDA,
+                        List.of(
+                                new AlbumSimpleResponse(10L, "Nevermind")
+                        )
+                );
 
         when(artistService.update(eq(1L), any())).thenReturn(response);
 
@@ -112,10 +120,13 @@ class ArtistControllerTest {
                         .content(objectMapper.writeValueAsString(request))
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nome").value("Nirvana"));
+                .andExpect(jsonPath("$.nome").value("Nirvana"))
+                .andExpect(jsonPath("$.albums").isArray())
+                .andExpect(jsonPath("$.albums[0].nome").value("Nevermind"));
 
         verify(artistService).update(eq(1L), any());
     }
+
 
     @DisplayName("Deve retornar 404 quando artista não existir")
     @Test
@@ -134,19 +145,28 @@ class ArtistControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    @DisplayName("Deve retornar lista de artistas")
     @Test
+    @DisplayName("Deve listar artistas com seus álbuns")
     void shouldListArtistsSuccessfully() throws Exception {
 
         List<ArtistResponse> artists = List.of(
-                new ArtistResponse(1L, "Teste 2", TypeArtist.BANDA)
+                new ArtistResponse(
+                        1L,
+                        "Teste 2",
+                        TypeArtist.BANDA,
+                        List.of(
+                                new AlbumSimpleResponse(20L, "Album Teste")
+                        )
+                )
         );
 
         when(artistService.list()).thenReturn(artists);
 
         mockMvc.perform(get("/v1/artists"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].nome").value("Teste 2"));
+                .andExpect(jsonPath("$[0].nome").value("Teste 2"))
+                .andExpect(jsonPath("$[0].albums").isArray())
+                .andExpect(jsonPath("$[0].albums[0].nome").value("Album Teste"));
 
         verify(artistService).list();
     }

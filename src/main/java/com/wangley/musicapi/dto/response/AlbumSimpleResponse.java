@@ -1,4 +1,6 @@
 package com.wangley.musicapi.dto.response;
 
-public record AlbumSimpleResponse() {
-}
+public record AlbumSimpleResponse(
+    Long id,
+    String nome
+) {}

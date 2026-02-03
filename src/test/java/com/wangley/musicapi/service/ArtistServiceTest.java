@@ -115,6 +115,7 @@ class ArtistServiceTest {
         assertEquals(artistId, result.id());
         assertEquals("Nirvana", result.nome());
         assertEquals(TypeArtist.BANDA, result.tipo());
+        assertNotNull(result.albums());
 
         verify(artistRepository).findById(artistId);
         verify(artistRepository).save(existingArtist);
@@ -156,13 +157,14 @@ class ArtistServiceTest {
         assertEquals(artistId, result.id());
         assertEquals("Metálica", result.nome());
         assertEquals(TypeArtist.BANDA, result.tipo());
+        assertNotNull(result.albums());
 
         verify(artistRepository).findById(artistId);
     }
 
-    @DisplayName("Deve lisar artistas com sucesso")
+    @DisplayName("Deve listar artistas com sucesso")
     @Test
-    void shouldListArtistsSucessfully() {
+    void shouldListArtistsSuccessfully() {
 
         Artist artist1 = new Artist();
         artist1.setId(1L);

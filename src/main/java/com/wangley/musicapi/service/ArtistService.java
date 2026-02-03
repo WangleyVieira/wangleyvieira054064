@@ -3,6 +3,7 @@ package com.wangley.musicapi.service;
 import com.wangley.musicapi.domain.entity.Artist;
 import com.wangley.musicapi.dto.request.ArtistCreateRequest;
 import com.wangley.musicapi.dto.request.ArtistUpdateRequest;
+import com.wangley.musicapi.dto.response.AlbumSimpleResponse;
 import com.wangley.musicapi.dto.response.ArtistResponse;
 import com.wangley.musicapi.exception.ResourceNotFoundException;
 import com.wangley.musicapi.repository.ArtistRepository;
@@ -46,8 +47,16 @@ public class ArtistService {
         return new ArtistResponse(
                 updatedArtista.getId(),
                 updatedArtista.getNome(),
-                updatedArtista.getTipo()
+                updatedArtista.getTipo(),
+                updatedArtista.getAlbums()
+                        .stream()
+                        .map(album -> new AlbumSimpleResponse(
+                                album.getId(),
+                                album.getNome()
+                        ))
+                        .toList()
         );
+
     }
 
     @Transactional(readOnly = true)
@@ -57,7 +66,14 @@ public class ArtistService {
                 .map(artista -> new ArtistResponse(
                         artista.getId(),
                         artista.getNome(),
-                        artista.getTipo()
+                        artista.getTipo(),
+                        artista.getAlbums()
+                                .stream()
+                                .map(album -> new AlbumSimpleResponse(
+                                        album.getId(),
+                                        album.getNome()
+                                ))
+                                .toList()
                 ))
                 .toList();
     }
@@ -72,7 +88,15 @@ public class ArtistService {
         return new ArtistResponse(
                 artista.getId(),
                 artista.getNome(),
-                artista.getTipo()
+                artista.getTipo(),
+                artista.getAlbums()
+                        .stream()
+                        .map(album -> new AlbumSimpleResponse(
+                                album.getId(),
+                                album.getNome()
+                        ))
+                        .toList()
         );
+
     }
 }
