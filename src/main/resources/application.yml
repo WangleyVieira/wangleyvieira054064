@@ -60,3 +60,7 @@ management:
       probes:
         enabled: true
       show-details: always
+
+regionais:
+  api:
+    url: https://integrador-argus-api.geia.vip/v1/regionais
