@@ -1,7 +1,9 @@
 package com.wangley.musicapi.controller;
 
 import com.wangley.musicapi.dto.external.RegionalImportResponse;
+import com.wangley.musicapi.dto.external.RegionalSyncResponse;
 import com.wangley.musicapi.service.RegionalImportService;
+import com.wangley.musicapi.service.RegionalSyncService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class RegionalController {
 
     private final RegionalImportService importService;
+    private final RegionalSyncService regionalSyncService;
 
-    public RegionalController(RegionalImportService importService) {
+    public RegionalController(
+            RegionalImportService importService,
+            RegionalSyncService regionalSyncService
+    ) {
         this.importService = importService;
+        this.regionalSyncService = regionalSyncService;
     }
 
     @Operation(summary = "Importar regionais da API externa")
@@ -30,6 +37,19 @@ public class RegionalController {
                 new  RegionalImportResponse(
                         "Importação realizada com sucesso.",
                         total
+                )
+        );
+    }
+
+    @Operation(summary = "Sincronização de regionais")
+    @PostMapping("/sincronizar")
+    public ResponseEntity<RegionalSyncResponse> sincronizar() {
+
+        regionalSyncService.sincronizar();
+
+        return ResponseEntity.accepted().body(
+                new RegionalSyncResponse(
+                        "Sincronização de regionais realizada com sucesso"
                 )
         );
     }

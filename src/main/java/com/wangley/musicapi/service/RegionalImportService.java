@@ -30,12 +30,13 @@ public class RegionalImportService {
                 regionalClient.fetchAll();
 
         regionalExternalResponses.forEach(regionalExternalResponse -> {
-           Regional regional = new Regional(
-                   regionalExternalResponse.id(),
-                   regionalExternalResponse.nome(),
-                   true
-           );
-           regionalRepository.save(regional);
+            Regional regional = new Regional();
+            regional.setCodigoExterno(regionalExternalResponse.id());
+            regional.setNome(regionalExternalResponse.nome());
+            regional.setAtivo(true);
+
+            regionalRepository.save(regional);
+
         });
 
         return regionalExternalResponses.size();
