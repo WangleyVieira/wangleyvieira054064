@@ -4,22 +4,16 @@ Projeto desenvolvido como desafio técnico backend, com foco em engenharia de so
 
 A aplicação foi pensada como um cenário real de produção, incluindo integração com sistema externo, sincronização de dados, versionamento de banco, armazenamento de arquivos e ambiente padronizado via Docker.
 
+---
+
 ## Dados da candidatura
+* **Candidato:** WANGLEY MATHEUS DE SOUZA VIEIRA
+* **N° Inscrição:** 16453
+* **Processo Seletivo:** Nº 001/2026/SEPLAG – Analista de TI
+* **Perfil:** Engenheiro da Computação - Sênior
+* **Local:** Secretaria de Estado de Planejamento e Gestão (Cuiabá/MT)
 
-Nome: WANGLEY MATHEUS DE SOUZA VIEIRA - N° Inscrição : 16453
-
-PROCESSO SELETIVO CONJUNTO Nº 001/2026/SEPLAG e demais Órgãos - Engenheiro da Computação- Sênior
-
-Cidade: Cuiabá
-
-Local: SECRETARIA DE ESTADO DE PLANEJAMENTO E GESTÃO
-
-Cargo: ANALISTA DE TECNOLOGIA DA INFORMAÇÃO
-
-Perfil: ENGENHEIRO DA COMPUTAÇÃO - SÊNIOR
-
-Stack principal:
-Java 21 · Spring Boot · JPA/Hibernate · PostgreSQL · MinIO · Docker · Flyway · JUnit · Mockito
+---
 
 ##  Índice
 
@@ -38,7 +32,7 @@ Java 21 · Spring Boot · JPA/Hibernate · PostgreSQL · MinIO · Docker · Flyw
 13. [Instalação e execução do projeto](#instalação-e-execução-do-projeto)
 14. [Considerações finais](#considerações-finais)
 
-
+---
 ## Objetivo do projeto
 
 Construir uma API REST para gerenciamento de Artistas, Álbuns e Regionais, priorizando:
@@ -55,23 +49,19 @@ Construir uma API REST para gerenciamento de Artistas, Álbuns e Regionais, prio
 
 Decisões técnicas coerentes com ambiente real
 
+---
+
 ## Arquitetura adotada
 
-A aplicação segue uma arquitetura em camadas bem definidas, favorecendo manutenção e escalabilidade:
-
-1. **Controller**
-: Responsável apenas por entrada/saída HTTP, validações e códigos de status.
-
-2. **Service**
-: Camada central de regras de negócio, orquestração de fluxos e controle transacional.
-
-3. **Repository**
-: Acesso a dados via Spring Data JPA, sem regras de negócio embutidas.
-
-4. **DTOs (Request / Response)**
-: Utilizados para evitar o acoplamento direto das entidades com a API pública.
+A aplicação segue uma arquitetura em camadas para favorecer a manutenção e escalabilidade:
+* **Controller:** Responsável pela exposição dos endpoints, validações de entrada e códigos de status HTTP.
+* **Service:** Camada central de regras de negócio, orquestração de fluxos e controle transacional.
+* **Repository:** Interface de acesso a dados via Spring Data JPA.
+* **DTOs (Request/Response):** Garantem que as entidades de banco de dados não sejam expostas diretamente, protegendo o domínio.
 
 Essa separação reduz impactos de mudança e facilita testes automatizados.
+
+---
 
 ## Modelagem de domínio
 Relacionamento Artista ↔ Álbum
@@ -85,6 +75,8 @@ Relacionamento Artista ↔ Álbum
 - Entidades desacopladas dos contratos de API
 
 Essa modelagem permite evolução futura sem reestruturações profundas.
+
+---
 
 ## Integração com sistema externo (Regionais)
 
@@ -106,6 +98,8 @@ Foi adotado um modelo de versionamento lógico, garantindo histórico e rastreab
 
 Essa abordagem evita perda de dados e facilita auditoria.
 
+---
+
 ## Sincronização de dados externos
 
 A sincronização foi implementada com foco em simplicidade e previsibilidade:
@@ -120,61 +114,53 @@ A sincronização foi implementada com foco em simplicidade e previsibilidade:
 
 O comportamento do sistema é determinístico e fácil de testar.
 
+---
+
 ## Versionamento do banco de dados
 
-Foi utilizado Flyway para versionamento do schema:
-
-- Migrations imutáveis
-
-- Ajustes estruturais sempre em novas versões
-
-- Nenhuma migration antiga é alterada
-
-- Evolução incremental e segura
+Foi utilizado **Flyway** para versionamento do schema:
+- Migrations imutáveis.
+- Ajustes estruturais sempre em novas versões.
+- Nenhuma migration antiga é alterada.
+- Evolução incremental e segura.
 
 Isso garante que o projeto possa ser executado do zero sem inconsistências.
+
+---
 
 ## Armazenamento de arquivos
 
 Para simular um ambiente real:
-
-- Utilizado MinIO (compatível com S3)
-
-- Upload de capas de álbuns
-
-- Geração de URLs temporárias (presigned)
-
-- Metadados no banco, binários no storage
+- Utilizado **MinIO** (compatível com S3).
+- Upload de capas de álbuns.
+- Geração de URLs temporárias (*presigned*).
+- Metadados no banco, binários no storage.
 
 A solução permite troca futura do provider sem impacto no domínio.
+
+---
 
 ## Estratégia de testes
 
 Os testes foram escritos priorizando clareza e isolamento:
-
-- Services testados com Mockito (@Mock e @InjectMocks)
-
-- Controllers testados com MockMvc
-
-- Cenários reais simulados:
-
-: Inserção, Atualização, Listagem, Integração externa e Sincronização de dados
+- **Services:** Testados com Mockito (`@Mock` e `@InjectMocks`).
+- **Controllers:** Testados com MockMvc.
+- **Cenários reais simulados:** Inserção, Atualização, Listagem, Integração externa e Sincronização de dados.
 
 Os testes validam comportamento, não implementação interna.
 
+---
+
 ## Ambiente com Docker
 
-A aplicação é entregue como containers orquestrados, garantindo ambiente reproduzível.
-
-Serviços incluídos:
-
-- API
-
-- Banco de dados
-
-- Storage de arquivos
+A aplicação é entregue como containers orquestrados, garantindo ambiente reproduzível. Serviços incluídos:
+- **API** (Spring Boot)
+- **Banco de Dados** (PostgreSQL)
+- **Storage de Arquivos** (MinIO)
 
 Tudo pode ser executado com um único comando via Docker Compose.
+
+---
 
 ## Decisões técnicas relevantes
 
@@ -192,6 +178,8 @@ Algumas decisões importantes tomadas durante o desenvolvimento:
 
 - Código escrito para leitura por outros desenvolvedores
 
+---
+
 ## O que não foi priorizado
 
 Os itens abaixo foram conscientemente deixados fora do escopo:
@@ -203,6 +191,8 @@ Os itens abaixo foram conscientemente deixados fora do escopo:
 - Observabilidade (logs estruturados, métricas)
 
 A prioridade foi **garantir qualidade, clareza e consistência do core da aplicação**.
+
+---
 
 ## Instalação e execução do projeto
 
@@ -226,7 +216,7 @@ Não é necessário instalar Java, Maven ou banco de dados localmente.
    ```
 2. **Suba os containers**
     ```bash
-    docker-compose up -d
+    docker-compose up -d --build
    ```
 Esse comando irá subir:
 
@@ -252,7 +242,20 @@ Após a inicialização:
       http://localhost:9001
    ```
 
-As credenciais do MinIO estão definidas no docker-compose.yml.
+**Credenciais de Acesso (Ambiente Local)**
+
+Para facilitar a avaliação e o gerenciamento dos serviços em ambiente de desenvolvimento, utilize as credenciais abaixo:
+
+**API (JWT)**
+* **Usuário:** `admin`
+* **Senha:** `admin`
+
+**MinIO Console (Storage)**
+
+* **Access Key:** `minioadmin`
+* **Secret Key:** `minioadmin`
+
+> **Importante:** Estas credenciais são exclusivas para o perfil `local`. Em produção, o sistema utiliza variáveis de ambiente protegidas para injeção de secrets.
 
 **Executando os testes**
 
@@ -288,6 +291,8 @@ Encerrando os containers
     ```bash
       docker-compose down
    ```
+
+---
 
 ## Considerações finais
 

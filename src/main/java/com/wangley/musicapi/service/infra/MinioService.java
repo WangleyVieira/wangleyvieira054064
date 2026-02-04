@@ -3,9 +3,7 @@ package com.wangley.musicapi.service.infra;
 import com.wangley.musicapi.exception.StorageException;
 import com.wangley.musicapi.infrastructure.minio.MinioProperties;
 import com.wangley.musicapi.utils.storage.validation.ImageFileValidator;
-import io.minio.GetPresignedObjectUrlArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
+import io.minio.*;
 import io.minio.http.Method;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,25 +19,33 @@ public class MinioService {
     private final MinioClient minioClient;
     private final MinioProperties minioProperties;
 
-    public void upload(String bucket, String objectName, MultipartFile file) {
-
-        ImageFileValidator.validate(file);
-
+    public void upload(String bucketName, String objectName, MultipartFile file) {
         try {
+            boolean exists = minioClient.bucketExists(
+                    BucketExistsArgs.builder()
+                            .bucket(bucketName)
+                            .build()
+            );
+
+            if (!exists) {
+                minioClient.makeBucket(
+                        MakeBucketArgs.builder()
+                                .bucket(bucketName)
+                                .build()
+                );
+            }
+
             minioClient.putObject(
                     PutObjectArgs.builder()
-                            .bucket(bucket)
+                            .bucket(bucketName)
                             .object(objectName)
-                            .stream(
-                                    file.getInputStream(),
-                                    file.getSize(),
-                                    -1
-                            )
+                            .stream(file.getInputStream(), file.getSize(), -1)
                             .contentType(file.getContentType())
                             .build()
             );
+
         } catch (Exception e) {
-            throw new StorageException("Erro ao enviar arquivo para o MinIO", e);
+            throw new RuntimeException("Erro ao realizar upload para o MinIO", e);
         }
     }
 

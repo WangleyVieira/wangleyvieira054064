@@ -3,6 +3,7 @@ package com.wangley.musicapi.service;
 import com.wangley.musicapi.client.RegionalClient;
 import com.wangley.musicapi.domain.entity.Regional;
 import com.wangley.musicapi.dto.external.RegionalExternalResponse;
+import com.wangley.musicapi.dto.external.RegionalResponse;
 import com.wangley.musicapi.repository.RegionalRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,5 +41,17 @@ public class RegionalImportService {
         });
 
         return regionalExternalResponses.size();
+    }
+
+    @Transactional(readOnly = true)
+    public List<RegionalResponse> listarAtivos() {
+        return regionalRepository.findAllByAtivoTrue()
+                .stream()
+                .map(regional -> new RegionalResponse(
+                        regional.getId(),
+                        regional.getCodigoExterno(),
+                        regional.getNome()
+                ))
+                .toList();
     }
 }
