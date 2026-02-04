@@ -116,6 +116,26 @@ O comportamento do sistema é determinístico e fácil de testar.
 
 ---
 
+## Resiliência e Comunicação em Tempo Real
+
+Para garantir a saúde da aplicação e uma interface responsiva, foram implementados:
+
+* **Health Checks (Liveness & Readiness):** Endpoints configurados para monitorar a saúde da aplicação e sua prontidão para receber tráfego, facilitando a orquestração em ambientes como Kubernetes.
+* **WebSockets:** Implementação de mensageria em tempo real para notificar o frontend instantaneamente a cada novo álbum cadastrado, eliminando a necessidade de *polling* desnecessário.
+* WebSocket STOMP endpoint disponível em /ws.
+* Clientes devem conectar via /ws/websocket.
+
+Para realizar os testes de Websockets completos, utilizar cliente STOMP (ex: SockJS + StompJS).
+
+---
+
+##  Segurança e Controle de Tráfego
+
+* **JWT (JSON Web Token):** Autenticação robusta para proteção de rotas.
+* **Rate Limiting:** Proteção contra abusos e ataques de negação de serviço (DoS). Configurado para permitir **até 10 requisições por minuto por usuário**, garantindo a estabilidade dos recursos para todos.
+
+---
+
 ## Versionamento do banco de dados
 
 Foi utilizado **Flyway** para versionamento do schema:

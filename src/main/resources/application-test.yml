@@ -1,0 +1,25 @@
+spring:
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+
+  flyway:
+    enabled: false
+
+  main:
+    allow-bean-definition-overriding: true
+
+security:
+  jwt:
+    secret: test-secret
+    expiration: 300000
+    refresh-expiration: 900000
+
+minio:
+  url: http://localhost
+  public-url: http://localhost
+  access-key: test
+  secret-key: test
+  bucket: test-bucket
