@@ -92,7 +92,7 @@ O sistema consome dados de uma API externa de regionais, mas mantém uma tabela 
 
 **Decisão arquitetural**
 
-: Dados externos não sobrescrevem registros existentes.
+Dados externos não sobrescrevem registros existentes.
 
 Foi adotado um modelo de versionamento lógico, garantindo histórico e rastreabilidade.
 
@@ -158,15 +158,7 @@ Os testes foram escritos priorizando clareza e isolamento:
 
 - Cenários reais simulados:
 
-: -Inserção
-
-: - Atualização
-
-: - Listagem
-
-: - Integração externa
-
-: - Sincronização de dados
+: Inserção, Atualização, Listagem, Integração externa e Sincronização de dados
 
 Os testes validam comportamento, não implementação interna.
 
