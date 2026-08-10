@@ -1,36 +1,20 @@
 ## Projeto Desenvolvedor Back End – API REST de Artistas, Álbuns e Regionais
 
-Projeto desenvolvido como desafio técnico backend, com foco em engenharia de software, boas práticas, código limpo, testes automatizados e facilidade de evolução.
-
-A aplicação foi pensada como um cenário real de produção, incluindo integração com sistema externo, sincronização de dados, versionamento de banco, armazenamento de arquivos e ambiente padronizado via Docker.
-
----
-
-## Dados da candidatura
-* **Candidato:** WANGLEY MATHEUS DE SOUZA VIEIRA
-* **N° Inscrição:** 16453
-* **Processo Seletivo:** Nº 001/2026/SEPLAG – Analista de TI
-* **Perfil:** Engenheiro da Computação - Sênior
-* **Local:** Secretaria de Estado de Planejamento e Gestão (Cuiabá/MT)
-
----
-
 ##  Índice
 
-1. [Dados da candidatura](#dados-da-candidatura)
-2. [Objetivo do projeto](#objetivo-do-projeto)
-3. [Arquitetura adotada](#arquitetura-adotada)
-4. [Modelagem de domínio](#modelagem-de-domínio)
-5. [Integração com sistema externo (Regionais)](#integração-com-sistema-externo-regionais)
-6. [Sincronização de dados externos](#sincronização-de-dados-externos)
-7. [Versionamento do banco de dados](#versionamento-do-banco-de-dados)
-8. [Armazenamento de arquivos](#armazenamento-de-arquivos)
-9. [Estratégia de testes](#estratégia-de-testes)
-10. [Ambiente com Docker](#ambiente-com-docker)
-11. [Decisões técnicas relevantes](#decisões-técnicas-relevantes)
-12. [O que não foi priorizado](#o-que-não-foi-priorizado)
-13. [Instalação e execução do projeto](#instalação-e-execução-do-projeto)
-14. [Considerações finais](#considerações-finais)
+1. [Objetivo do projeto](#objetivo-do-projeto)
+2. [Arquitetura adotada](#arquitetura-adotada)
+3. [Modelagem de domínio](#modelagem-de-domínio)
+4. [Integração com sistema externo (Regionais)](#integração-com-sistema-externo-regionais)
+5. [Sincronização de dados externos](#sincronização-de-dados-externos)
+6. [Versionamento do banco de dados](#versionamento-do-banco-de-dados)
+7. [Armazenamento de arquivos](#armazenamento-de-arquivos)
+8. [Estratégia de testes](#estratégia-de-testes)
+9. [Ambiente com Docker](#ambiente-com-docker)
+10. [Decisões técnicas relevantes](#decisões-técnicas-relevantes)
+11. [O que não foi priorizado](#o-que-não-foi-priorizado)
+12. [Instalação e execução do projeto](#instalação-e-execução-do-projeto)
+13. [Considerações finais](#considerações-finais)
 
 ---
 ## Objetivo do projeto
